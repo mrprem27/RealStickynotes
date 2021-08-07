@@ -1,0 +1,1186 @@
+<!-- {% load static %} -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDo | List</title>
+    <style>
+      body {
+        visibility: hidden;
+      }
+      textarea::placeholder {
+        color: wheat;
+      }
+
+      textarea {
+        background-color: rgb(44, 73, 99);
+        color: wheat;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      h1 {
+        font-size: 43px;
+        color: white;
+      }
+
+      body {
+        background-color: rgba(15, 15, 15, 0.966);
+      }
+
+      #logout {
+        font-size: 25px;
+        padding: 8px;
+      }
+
+      .top {
+        padding: 7px;
+        margin: 30px;
+        background-color: rgba(58, 27, 145, 0.849);
+        display: flex;
+        justify-content: space-between;
+      }
+
+      input::-webkit-calendar-picker-indicator {
+        position: absolute;
+        left: -300px;
+      }
+
+      #search_bar {
+        margin-top: 50px;
+        display: flex;
+        justify-content: center;
+      }
+
+      #task_search {
+        border: 2px solid black;
+        border-radius: 2.5px;
+        width: 400px;
+        height: 32px;
+        font-size: 18px;
+      }
+
+      #search {
+        padding: 5.65px;
+        font-size: 18px;
+        border: 2px solid black;
+        border-radius: 2.5px;
+        margin-left: -5px;
+        position: relative;
+      }
+
+      .tasks {
+        justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 20px 50px;
+      }
+
+      .task {
+        text-shadow: 1.2px 1.2px 1.2px black;
+        color: wheat;
+        border-radius: 2px;
+        margin: 30px;
+        width: fit-content;
+        height: fit-content;
+        padding: 13px;
+        padding-bottom: 0;
+        background-color: rgba(8, 144, 179, 0.74);
+        border: 2px solid black;
+      }
+
+      .task h3 {
+        margin: 10px;
+        font-size: 15px;
+        text-align: center;
+      }
+
+      .section {
+        border-bottom: 2px solid rgba(245, 222, 179, 0.836);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .task_img {
+        position: relative;
+        top: -1px;
+        left: -1px;
+        width: 301px;
+        border-radius: 5px;
+      }
+
+      .button {
+        margin: 4px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .mark,
+      .butt {
+        background-color: black;
+        height: 20px;
+        width: 40px;
+      }
+
+      #description {
+        resize: none;
+      }
+
+      #add-task-form {
+        display: flex;
+        flex-direction: column;
+        width: 480px;
+        padding: 20px 0;
+        color: rgba(245, 222, 179, 0.918);
+        background-color: rgba(56, 25, 143, 0.949);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .add-task {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        z-index: 3;
+        top: 0vw;
+        position: fixed;
+        border: 2px solid black;
+        background-color: rgba(27, 26, 26, 0.541);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .add-task input {
+        height: 30px;
+        width: 415px;
+        margin: 3.5px 0;
+        font-size: 18px;
+      }
+
+      .add-task textarea {
+        height: 200px;
+        width: 415px;
+        margin: 8px 0;
+        text-decoration: underline;
+        font-size: 16px;
+      }
+
+      .task_top {
+        display: flex;
+        margin-bottom: 7px;
+        justify-content: space-between;
+      }
+
+      .open_view {
+        z-index: 3;
+        display: none;
+        height: 100vh;
+        top: 0;
+        position: fixed;
+        width: 100vw;
+        background-color: rgba(90, 94, 94, 0.301);
+        justify-content: center;
+        align-self: center;
+      }
+
+      .open_task_view {
+        box-shadow: 0px 0px 5px black;
+        align-self: center;
+        text-shadow: 1.2px 1.2px 1.2px black;
+        color: wheat;
+        border-radius: 2px;
+        width: 670px;
+        max-height: 100vh;
+        padding: 13px;
+        background-color: rgba(56, 25, 143, 0.949);
+        border: 2px solid black;
+      }
+      .open_task_view h3 {
+        margin: 10px;
+        font-size: 15px;
+        text-align: center;
+      }
+
+      .open_task_view .section {
+        border-bottom: 2px solid rgba(245, 222, 179, 0.836);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .open_task_view img {
+        max-height: 210px;
+        box-shadow: 0px 0px 5px black;
+        max-width: 301px;
+        border-radius: 5px;
+      }
+
+      #edit_task_form input {
+        height: 30px;
+        box-shadow: 0px 0px 3px black;
+        border-radius: 2.8px;
+        width: 640px;
+        margin: 3px 0;
+        text-align: center;
+        font-size: 18px;
+      }
+      button {
+        box-shadow: 0px 0px 2px black;
+      }
+      #edit_task_form textarea {
+        height: 320px;
+        padding: 10px;
+        border-radius: 5px;
+        width: 640px;
+        box-shadow: 0px 0px 7px black;
+        resize: none;
+        margin-bottom: 8px;
+        text-decoration: underline;
+        font-size: 16px;
+      }
+
+      .open_btn {
+        display: flex;
+      }
+      .login {
+        display: flex;
+        height: 41.5vh;
+        justify-content: center;
+        align-items: center;
+      }
+      .login_box {
+        background-color: rgb(70, 83, 83);
+        height: 150px;
+        padding: 30px;
+        width: 430px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #email,
+      #email_register,
+      #name {
+        width: 315px;
+        height: 25px;
+        margin: 10px 30px;
+      }
+      #password,
+      .pass_register {
+        width: 315px;
+        height: 25px;
+        margin: 10px;
+      }
+      .login_register input[type="button"],
+      .login_register input[type="submit"] {
+        width: 152.5px;
+        height: 30px;
+      }
+      .login_register input[type="submit"] {
+        margin: 10px;
+        margin-left: 78px;
+      }
+      .register {
+        display: flex;
+        height: 55vh;
+        justify-content: center;
+        align-items: center;
+      }
+      .register_box {
+        background-color: rgb(70, 83, 83);
+        height: 250px;
+        padding: 30px;
+        width: 430px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .login {
+        display: none;
+      }
+      .index {
+        display: none;
+      }
+      .register {
+        display: none;
+      }
+    </style>
+  </head>
+  <body id="body">
+    <div class="top">
+      <h1 id="logo">StickyNotes</h1>
+    </div>
+    <div class="index" id="index" data-userstatus="{{user_status}}">
+      <div>
+        <button
+          style="position: absolute; top: 40px; right: 40px"
+          id="logout"
+          onclick="logout()"
+        >
+          Logout
+        </button>
+      </div>
+      <form method="POST" id="search_bar">
+        {% csrf_token %}
+        <input
+          list="tasks_list"
+          name="task_search"
+          id="task_search"
+          required
+          placeholder="Search Title(to find all task input * in field)"
+          autocomplete="off"
+        />
+        <datalist id="tasks_list">
+          {% for task in tasks %}
+          <option value="{{task.title}}"></option>
+          {% endfor %}
+        </datalist>
+        <input type="submit" value="Search" id="search" />
+      </form>
+      <div class="tasks">
+        <div class="task">
+          <div class="task_top">
+            <h4>Pr.</h4>
+            <h4></h4>
+          </div>
+          <div class="section">
+            <img
+              src="{% static 'todo/images/wallpaper2you_341524.jpg' %}"
+              alt="This is an image"
+              class="task_img"
+            />
+            <center>
+              <button
+                onclick="add_task()"
+                style="
+                  padding: 4px;
+                  margin: 6px;
+                  font-size: 16px;
+                  border-radius: 3.5px;
+                "
+              >
+                Add Task
+              </button>
+            </center>
+          </div>
+          <div class="button">
+            <button
+              style="background-color: rgba(255, 255, 255, 0.774)"
+              id="task{{task.id}}mark"
+              class="mark"
+            ></button>
+            <div id="task{{task.id}}open_task" class="open_task">
+              <button
+                style="background-color: rgba(211, 211, 24, 0.959)"
+                id="task{{task.id}}mark"
+                class="mark"
+              ></button>
+              <button
+                style="background-color: rgba(207, 54, 54, 0.829)"
+                id="task{{task.id}}mark"
+                class="mark"
+              ></button>
+            </div>
+          </div>
+        </div>
+        {% for task in tasks %}
+        <div id="task{{task.id}}" class="task">
+          <div class="task_top">
+            <h4>Pr.-{{task.priority}}</h4>
+            <h4>{{task.date}}</h4>
+          </div>
+          <div class="section">
+            <img
+              src="{{task.img.url}}"
+              alt="This is an image"
+              class="task_img"
+            />
+            <h3>{{task.title}}</h3>
+          </div>
+          <div class="button">
+            <button
+              style="background-color: white"
+              onclick="mark(this)"
+              data-mark="{{task.status}}"
+              data-id="{{task.id}}"
+              id="task{{task.id}}mark"
+              class="mark"
+              type="button"
+            ></button>
+            <div id="task{{task.id}}open_task" class="open_task">
+              <button
+                style="background-color: rgba(211, 211, 24, 0.959)"
+                id="task{{task.id}}open_task"
+                class="open_task butt"
+                data-id="{{task.id}}"
+                onclick="open_task(this)"
+              ></button>
+              <button
+                style="background-color: rgba(207, 54, 54, 0.829)"
+                id="task{{task.id}}del"
+                class="del butt"
+                data-id="{{task.id}}"
+                onclick="del(this)"
+              ></button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="add-task">
+        <form
+          method="POST"
+          id="add-task-form"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <!-- <input
+            type="hidden"
+            name="user_id"
+            id="user_id_task"
+            value="{{task_user}}"
+          /> -->
+          <input
+            type="text"
+            autocomplete="off"
+            name="title"
+            required
+            maxlength="36"
+            placeholder="Title"
+          />
+          <textarea
+            name="description"
+            placeholder="Description"
+            id="description"
+            cols="30"
+            rows="10"
+            maxlength="3900"
+          ></textarea>
+          <input type="file" id="img" name="img" accept="image/*" />
+          Priority:-
+          <select name="priority" id="priority">
+            <option value="">Choose</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+          <input class="btn_2" type="submit" value="Add-Task" />
+          <input class="btn_2" type="reset" value="Reset" id="reset_form" />
+          <input
+            class="btn_2"
+            onclick="close_add_task()"
+            type="button"
+            value="Cancel"
+          />
+        </form>
+      </div>
+      <div class="open_view" id="open_view_window">
+        <div id="open_task{{task.id}}" class="open_task_view">
+          <form
+            method="POST"
+            id="edit_task_form"
+            enctype="multipart/form-data"
+            data-taskid="{{open}}"
+          >
+            {% csrf_token %}
+            <input
+              type="hidden"
+              name="taskid"
+              id="taskid"
+              value="{{task_user.id}}"
+            />
+            <div class="task_top">
+              <h4>
+                Pr.-<select name="priority" id="open_priority">
+                  <option value="">Choose</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+              </h4>
+              <h4>{{task.date}}</h4>
+            </div>
+            <div class="section">
+              <img
+                src="{{task.img}}"
+                alt="This is an image"
+                class="task_img"
+                id="open_view_image"
+              />
+              <h3>
+                <input
+                  type="text"
+                  autocomplete="off"
+                  name="title"
+                  required
+                  id="open_view_title"
+                  maxlength="36"
+                  placeholder="Title"
+                />
+              </h3>
+              <textarea
+                name="description"
+                placeholder="Description"
+                id="open_description"
+                maxlength="3900"
+              ></textarea>
+            </div>
+            <div class="open_btn">
+              <input
+                data-id="{{task.id}}"
+                class="btn_2"
+                type="submit"
+                value="Make-Changes"
+                id="open_sub"
+              />
+              <input
+                id="open_cancel"
+                class="btn_2"
+                onclick="close_view_task()"
+                type="button"
+                value="Cancel"
+              />
+            </div>
+          </form>
+          <div class="button">
+            <button
+              style="background-color: white"
+              onclick="view_mark(this)"
+              data-mark="{{task.status}}"
+              data-id="{{task.id}}"
+              id="task_mark_view"
+              class="mark"
+              type="button"
+            ></button>
+            <button
+              style="background-color: rgba(207, 54, 54, 0.829)"
+              id="open_del"
+              class="del butt"
+              data-id="{{task.id}}"
+              onclick="open_del(this)"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="color: wheat" class="login_register">
+      <div class="login">
+        <div class="login_box">
+          <form method="POST" id="login_form">
+            {% csrf_token %}
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required />
+            <br />
+            <label for="password">Password:</label>
+            <input
+              type="password"
+              autocomplete="off"
+              name="password"
+              id="password"
+              maxlength="30"
+              required
+            />
+            <br />
+            <input
+              type="checkbox"
+              name="show_pass"
+              id="show_pass"
+              onclick="toggle()"
+            />
+            <b>Show Password</b>
+            <div class="login_btn">
+              <input type="submit" value="Login" />
+              <input type="button" value="Register" onclick="register_page()" />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="register">
+        <div class="register_box">
+          <form method="POST" id="register_form">
+            {% csrf_token %}
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name" required maxlength="30" />
+            <br />
+            <label for="email">Email:</label>
+            <input
+              type="email"
+              name="email_register"
+              id="email_register"
+              required
+            />
+            <br />
+            <label for="pass_register">Password:</label>
+            <input
+              autocomplete="off"
+              type="password"
+              name="pass_register"
+              id="pass_register"
+              class="pass_register"
+              maxlength="30"
+              required
+            />
+            <br />
+            <label for="pass_regis">Cnf Pass.:</label>
+            <input
+              autocomplete="off"
+              type="password"
+              name="pass"
+              class="pass_register"
+              maxlength="30"
+              required
+            />
+            <br />
+            <input
+              type="checkbox"
+              name="show_pass"
+              id="show_pass_register"
+              onclick="toggle_register()"
+            />
+            <b>Show Password</b>
+            <div class="register_btn">
+              <input type="submit" value="Register" />
+              <input type="button" value="Login" onclick="login_page()" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      setTimeout(visi, 500);
+      function visi() {
+        document.getElementById("body").style.visibility = "visible";
+        if (document.querySelector(".index").dataset.userstatus == "pos") {
+          document.querySelector(".index").style.display = "block";
+        } else {
+          document.querySelector(".login").style.display = "flex";
+        }
+        document.getElementById("body").style.visibility = "visible";
+      }
+      function logout() {
+        var request = new XMLHttpRequest();
+        request.onload = () => {
+          document.querySelector(".index").style.display = "none";
+          document.querySelector(".login").style.display = "flex";
+        };
+        request.open("GET", "{% url 'logout' %}");
+        request.send();
+      }
+      document.getElementById("login_form").onsubmit = (e) => {
+        if (document.getElementById("password").value.length < 6) {
+          alert("Password length should be greater than 6 Characters");
+          return false;
+        }
+        e.preventDefault();
+        var form = e.target;
+        var data = new FormData(form);
+        var request = new XMLHttpRequest();
+        request.onload = () => {
+          if (request.status == 200) {
+            // console.log(request.responseText)
+            newadd = JSON.parse(request.response);
+            // console.log(request.response);
+            if (newadd.status == "fail") {
+              alert("Wrong Credentials!!");
+            } else {
+              {
+                alert("Login Successfully!!");
+                document.querySelector(".tasks").innerHTML = `<div class="task">
+              <div class="task_top">
+                <h4>Pr.</h4>
+                <h4></h4>
+              </div>
+              <div class="section">
+                <img
+                  src="{% static 'todo/images/wallpaper2you_341524.jpg' %}"
+                  alt="This is an image"
+                  class="task_img"
+                />
+                <center>
+                  <button
+                    onclick="add_task()"
+                    style="
+                      padding: 4px;
+                      margin: 6px;
+                      font-size: 16px;
+                      border-radius: 3.5px;
+                    "
+                  >
+                    Add Task
+                  </button>
+                </center>
+              </div>
+              <div class="button">
+                <button
+                  style="background-color: rgba(255, 255, 255, 0.774)"
+                  id="task{{task.id}}mark"
+                  class="mark"
+                ></button>
+                <div id="task{{task.id}}open_task" class="open_task">
+                  <button
+                    style="background-color: rgba(211, 211, 24, 0.959)"
+                    id="task{{task.id}}mark"
+                    class="mark"
+                  ></button>
+                  <button
+                    style="background-color: rgba(207, 54, 54, 0.829)"
+                    id="task{{task.id}}mark"
+                    class="mark"
+                  ></button>
+                </div>
+              </div>
+            </div>`;
+                for (task of newadd.task) {
+                  document.querySelector(".tasks").insertAdjacentHTML(
+                    "beforeend",
+                    `<div id="task${task.id}" class="task">
+                <div class="task_top">
+                <h4>Pr.-${task.priority}</h4>
+                <h4>${task.date}</h4>
+              </div>
+              <div class="section">
+                <img src="${task.img}" alt="This is an image" class="task_img" />
+                <h3>${task.title}</h3>
+              </div>
+              <div class="button">
+                <button
+                style="background-color:white;"
+                  onclick="mark(this)"
+                  data-mark="${task.status}"
+                  data-id="${task.id}"
+                  id="task${task.id}mark"
+                  class="mark"
+                ></button>
+                <div id="task${task.id}open_task" class="open_task">
+                  <button style="background-color: rgba(211, 211, 24, 0.959)" id="task${task.id}open_task"
+                  class="open_task butt" data-id="${task.id}" onclick="open_task(this)"></button>
+                  <button
+                    style="background-color: rgba(207, 54, 54, 0.829)"
+                    id="task${task.id}del"
+                    class="del butt"
+                    data-id="${task.id}"
+                    onclick="del(this)"
+                  ></button>
+                </div>
+              </div>
+            </div>`
+                  );
+                  var btn = document.getElementById(`task${task.id}mark`);
+                  if (btn.dataset.mark == "true") {
+                    btn.style.backgroundColor = "green";
+                  } else {
+                    btn.style.backgroundColor = "white";
+                  }
+                }
+                form.reset();
+                document.querySelector(".index").style.display = "block";
+                document.querySelector(".login").style.display = "none";
+                document.querySelector(".register").style.display = "none";
+              }
+            }
+          } else {
+            alert("server Error!! :-)");
+          }
+        };
+        request.open("POST", "{% url 'login' %}");
+        request.send(data);
+      };
+
+      document.getElementById("register_form").onsubmit = (e) => {
+        var ps = document.getElementsByClassName("pass_register");
+        if (ps[0].value != ps[1].value) {
+          alert("Password doesn't match");
+          return false;
+        }
+        if (ps[0].value.length < 6) {
+          alert("Password length should be greater than 6 Characters");
+          return false;
+        }
+        e.preventDefault();
+        var form = e.target;
+        var data = new FormData(form);
+        var request = new XMLHttpRequest();
+        request.onload = () => {
+          if (request.status == 200) {
+            newadd = JSON.parse(request.response);
+            // console.log(request.response);
+            if (newadd.status == "fail") {
+              alert("Account associated with this gmail already Exist!!");
+            } else {
+              {
+                alert(
+                  "Account Created Successfully!!\nPlease remember your Password because we can't help  in resetting it."
+                );
+                document.getElementById("email").value =
+                  document.getElementById("email_register").value;
+                document.getElementById("password").value =
+                  document.getElementById("pass_register").value;
+                form.reset();
+                document.querySelector(".register").style.display = "none";
+                document.querySelector(".login").style.display = "flex";
+              }
+            }
+          } else {
+            alert("server Error!! :-)");
+          }
+        };
+        request.open("POST", "{% url 'signup' %}");
+        request.send(data);
+      };
+      function login_page() {
+        document.querySelector(".index").style.display = "none";
+        document.querySelector(".login").style.display = "flex";
+        document.querySelector(".register").style.display = "none";
+      }
+      function toggle_register() {
+        var chk = document.getElementsByClassName("pass_register");
+        if (chk[0].type == "password") {
+          chk[0].type = "text";
+          chk[1].type = "text";
+        } else {
+          chk[0].type = "password";
+          chk[1].type = "password";
+        }
+      }
+      function register_page() {
+        document.querySelector(".index").style.display = "none";
+        document.querySelector(".login").style.display = "none";
+        document.querySelector(".register").style.display = "flex";
+      }
+      function toggle() {
+        var chk = document.getElementById("password");
+        if (chk.type == "password") chk.type = "text";
+        else chk.type = "password";
+      }
+
+      document.getElementById("search_bar").onsubmit = (e) => {
+        e.preventDefault();
+        var form = e.target;
+        var data = new FormData(form);
+        var request = new XMLHttpRequest();
+        request.onload = () => {
+          if (request.status == 200) {
+            newadd = JSON.parse(request.response);
+            // console.log(newadd.new_task);
+            document.querySelector(".tasks").innerHTML = `<div class="task">
+              <div class="task_top">
+                <h4>Pr.</h4>
+                <h4></h4>
+              </div>
+              <div class="section">
+                <img
+                  src="{% static 'todo/images/wallpaper2you_341524.jpg' %}"
+                  alt="This is an image"
+                  class="task_img"
+                />
+                <center>
+                  <button
+                    onclick="add_task()"
+                    style="
+                      padding: 4px;
+                      margin: 6px;
+                      font-size: 16px;
+                      border-radius: 3.5px;
+                    "
+                  >
+                    Add Task
+                  </button>
+                </center>
+              </div>
+              <div class="button">
+                <button
+                  style="background-color: rgba(255, 255, 255, 0.774)"
+                  id="task{{task.id}}mark"
+                  class="mark"
+                ></button>
+                <div id="task{{task.id}}open_task" class="open_task">
+                  <button
+                    style="background-color: rgba(211, 211, 24, 0.959)"
+                    id="task{{task.id}}mark"
+                    class="mark"
+                  ></button>
+                  <button
+                    style="background-color: rgba(207, 54, 54, 0.829)"
+                    id="task{{task.id}}mark"
+                    class="mark"
+                  ></button>
+                </div>
+              </div>
+            </div>`;
+            for (new_task of newadd.new_task) {
+              document.querySelector(".tasks").insertAdjacentHTML(
+                "beforeend",
+                `<div id="task${new_task.id}" class="task">
+                <div class="task_top">
+                <h4>Pr.-${new_task.priority}</h4>
+                <h4>${new_task.date}</h4>
+              </div>
+              <div class="section">
+                <img src="${new_task.img}" alt="This is an image" class="task_img" />
+                <h3>${new_task.title}</h3>
+              </div>
+              <div class="button">
+                <button
+                style="background-color:white;"
+                  onclick="mark(this)"
+                  data-mark="${new_task.status}"
+                  data-id="${new_task.id}"
+                  id="task${new_task.id}mark"
+                  class="mark"
+                ></button>
+                <div id="task${new_task.id}open_task" class="open_task">
+                  <button style="background-color: rgba(211, 211, 24, 0.959)" id="task${new_task.id}open_task"
+                  class="open_task butt" data-id="${new_task.id}" onclick="open_task(this)"></button>
+                  <button
+                    style="background-color: rgba(207, 54, 54, 0.829)"
+                    id="task${new_task.id}del"
+                    class="del butt"
+                    data-id="${new_task.id}"
+                    onclick="del(this)"
+                  ></button>
+                </div>
+              </div>
+            </div>`
+              );
+              var btn = document.getElementById(`task${new_task.id}mark`);
+              if (btn.dataset.mark == "true") {
+                btn.style.backgroundColor = "green";
+              } else {
+                btn.style.backgroundColor = "white";
+              }
+            }
+            // form.reset();
+          }
+        };
+        request.open("POST", "{% url 'search_task' %}");
+        request.send(data);
+      };
+
+      function open_del(btn) {
+        del(btn);
+        close_view_task();
+      }
+      document
+        .querySelector("#edit_task_form")
+        .addEventListener("submit", edit_task_make);
+      function edit_task_make(e) {
+        e.preventDefault();
+        if (!confirm("Wants to make changes??"))
+          return false;
+        var form = e.target;
+        var data = new FormData(form);
+        var request = new XMLHttpRequest();
+        console.log(document.getElementById('taskid').value)
+        request.onload = () => {
+          if (request.status == 200) {
+            newadd = JSON.parse(request.response);
+            // console.log("sucess!!")
+            var h4=document.querySelectorAll(`#task${newadd.new.id} .task_top h4`)
+            h4[0].innerHTML=`Pr.${newadd.new.priority}`
+            h4[1].innerHTML=newadd.new.date
+            document.querySelector(`#task${newadd.new.id} .section h3`).innerHTML=newadd.new.title
+            close_view_task();
+          }
+        };
+        request.open("POST", "{% url 'edit' %}");
+        request.send(data);
+      }
+      function view_mark(btn) {
+        let mydata = { id: btn.dataset.id, mark: btn.dataset.mark };
+        var json_upload = "json_val=" + JSON.stringify(mydata);
+        var xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          if (btn.dataset.mark == "True") {
+            btn.style.backgroundColor = "white";
+            document.getElementById(
+              `task${btn.dataset.id}mark`
+            ).style.backgroundColor = "white";
+            document.getElementById(`task${btn.dataset.id}mark`).dataset.mark =
+              "False";
+            btn.dataset.mark = "False";
+          } else {
+            btn.style.backgroundColor = "green";
+            btn.dataset.mark = "True";
+            document.getElementById(`task${btn.dataset.id}mark`).dataset.mark =
+              "True";
+            document.getElementById(
+              `task${btn.dataset.id}mark`
+            ).style.backgroundColor = "green";
+          }
+        };
+        xhr.open("POST", "{% url 'mark_task' %}");
+        xhr.setRequestHeader(
+          "Content-type",
+          "application/x-www-form-urlencoded"
+        );
+        // let data_json = JSON.parse(data);
+        // console.log(data_json);
+        xhr.send(json_upload);
+      }
+      function close_view_task() {
+        document.getElementById("open_view_window").style.display = "none";
+      }
+      function open_task(btn) {
+        let mydata = { id: btn.dataset.id };
+        var json_upload = "json_val=" + JSON.stringify(mydata);
+        var xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          if (xhr.status == 200) {
+            var newadd = JSON.parse(xhr.response);
+            // console.log(newadd);
+            document.querySelector("#taskid").value =
+              newadd.new_task.id;
+            document.getElementById("open_priority").value =
+              newadd.new_task.priority;
+            var state = document.getElementById("task_mark_view");
+            if (newadd.new_task.status) state.dataset.mark = "True";
+            if (newadd.new_task.status == "False") state.dataset.mark = "False";
+            if (newadd.new_task.status == false) state.dataset.mark = "False";
+            state.dataset.id = newadd.new_task.id;
+            document.getElementById("open_view_image").src =
+              newadd.new_task.img;
+            document.getElementById("open_description").value =
+              newadd.new_task.description;
+            document.getElementById("open_view_title").value =
+              newadd.new_task.title;
+            document.getElementById("open_del").dataset.id = newadd.new_task.id;
+            document.getElementById("open_sub").dataset.id = newadd.new_task.id;
+            if (state.dataset.mark == "True") {
+              state.style.backgroundColor = "green";
+            } else {
+              state.style.backgroundColor = "white";
+            }
+            document.getElementById("open_view_window").style.display = "flex";
+          }
+        };
+        xhr.open("POST", "{% url 'open' %}");
+        xhr.setRequestHeader(
+          "Content-type",
+          "application/x-www-form-urlencoded"
+        );
+        xhr.send(json_upload);
+      }
+      function task_del(btn) {
+        let mydata = { id: btn.dataset.id };
+        var json_upload = "json_val=" + JSON.stringify(mydata);
+        var xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          document.querySelector(`#task${btn.dataset.id}`).remove();
+        };
+        xhr.open("POST", "{% url 'del_task' %}");
+        xhr.setRequestHeader(
+          "Content-type",
+          "application/x-www-form-urlencoded"
+        );
+        xhr.send(json_upload);
+      }
+      function del(btn) {
+        if (!confirm("Are you sure??")) return;
+        task_del(btn);
+      }
+      function mark(btn) {
+        let mydata = { id: btn.dataset.id, mark: btn.dataset.mark };
+        var json_upload = "json_val=" + JSON.stringify(mydata);
+        var xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          if (btn.dataset.mark == "True" || btn.dataset.mark == "true") {
+            btn.style.backgroundColor = "white";
+            btn.dataset.mark = "false";
+          } else {
+            btn.style.backgroundColor = "green";
+            btn.dataset.mark = "true";
+          }
+        };
+        xhr.open("POST", "{% url 'mark_task' %}");
+        xhr.setRequestHeader(
+          "Content-type",
+          "application/x-www-form-urlencoded"
+        );
+        // let data_json = JSON.parse(data);
+        // console.log(data_json);
+        xhr.send(json_upload);
+      }
+      document.querySelectorAll(".mark").forEach((c) => {
+        if (c.dataset.mark == "True") c.style.backgroundColor = "green";
+      });
+      function add_task() {
+        document.querySelector(".add-task").style.display = "flex";
+      }
+      function close_add_task() {
+        document.querySelector(".add-task").style.display = "none";
+      }
+      document
+        .querySelector("#add-task-form")
+        .addEventListener("submit", add_value);
+      function add_value(e) {
+        e.preventDefault();
+        var form = e.target;
+        var data = new FormData(form);
+        var request = new XMLHttpRequest();
+        request.onload = () => {
+          if (request.status == 200) {
+            newadd = JSON.parse(request.response);
+            // console.log(request.response);
+            document.querySelector(".tasks").insertAdjacentHTML(
+              "beforeend",
+              `<div id="task${newadd.new_task.id}" class="task">
+          <div class="task_top">
+          <h4>Pr.-${newadd.new_task.priority}</h4>
+          <h4>${newadd.new_task.date}</h4>
+        </div>
+        <div class="section">
+          <img src="${newadd.new_task.img}" alt="This is an image" class="task_img" />
+          <h3>${newadd.new_task.title}</h3>
+        </div>
+        <div class="button">
+          <button
+          style="background-color:white;"
+            onclick="mark(this)"
+            data-mark="${newadd.new_task.status}"
+            data-id="${newadd.new_task.id}"
+            id="task${newadd.new_task.id}mark"
+            class="mark"
+          ></button>
+          <div id="task${newadd.new_task.id}open_task" class="open_task">
+            <button style="background-color: rgba(211, 211, 24, 0.959)" id="task${newadd.new_task.id}open_task"
+            class="open_task butt" data-id="${newadd.new_task.id}" onclick="open_task(this)"></button>
+            <button
+              style="background-color: rgba(207, 54, 54, 0.829)"
+              id="task${newadd.new_task.id}del"
+              class="del butt"
+              data-id="${newadd.new_task.id}"
+              onclick="del(this)"
+            ></button>
+          </div>
+        </div>
+      </div>`
+            );
+            form.reset();
+            document.querySelector(".add-task").style.display = "none";
+          }
+        };
+        request.open("POST", "{% url 'add_task' %}");
+        request.send(data);
+      }
+    </script>
+  </body>
+</html>
